@@ -86,7 +86,8 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: '이메일 또는 비밀번호가 올바르지 않습니다'
+        message: '존재하지 않는 사용자입니다',
+        errorCode: 'USER_NOT_FOUND'
       });
     }
 
@@ -95,7 +96,8 @@ router.post('/login', async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: '이메일 또는 비밀번호가 올바르지 않습니다'
+        message: '비밀번호가 올바르지 않습니다',
+        errorCode: 'INVALID_PASSWORD'
       });
     }
 
