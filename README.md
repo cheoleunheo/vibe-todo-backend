@@ -46,10 +46,15 @@ Node.js와 MongoDB를 사용한 완전한 할일 관리 웹 애플리케이션�
 npm install
 ```
 
-2. **환경 변수 설정**:
+2. **환경 변수 설정** (필수):
 ```bash
-# .env 파일 생성 (이미 생성되어 있음)
-# MongoDB 연결 정보 확인
+# 프로젝트 루트에 .env 파일을 생성하고 다음 내용 추가:
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database-name
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+PORT=5000
+NODE_ENV=development
+
+# 자세한 설정 방법은 env-setup.md 파일을 참고하세요.
 ```
 
 3. **개발 서버 실행** (백엔드 + 프론트엔드 동시 실행):

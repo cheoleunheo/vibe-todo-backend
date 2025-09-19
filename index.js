@@ -13,14 +13,21 @@ const PORT = process.env.PORT || 5000;
 
 // 미들웨어 설정
 app.use(cors({
-    origin: 'http://localhost:3000', // 프론트엔드 서버 주소
+    origin: 'http://localhost:5173', // Vite 프론트엔드 서버 주소
     credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB 연결
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/todo-app';
+// MongoDB 연결 (환경 변수에서만 가져오기)
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI 환경 변수가 설정되지 않았습니다.');
+  console.error('📝 .env 파일을 생성하고 MONGODB_URI를 설정해주세요.');
+  console.error('📖 자세한 내용은 env-setup.md 파일을 참고하세요.');
+  process.exit(1);
+}
 
 mongoose.connect(MONGODB_URI)
 .then(() => {
