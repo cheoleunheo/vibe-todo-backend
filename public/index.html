@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>할일 관리 - Todo App</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 로딩 화면 -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>로딩 중...</p>
+    </div>
+
+    <!-- 인증되지 않은 사용자를 위한 화면 -->
+    <div id="auth-container" class="auth-container" style="display: none;">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1><i class="fas fa-tasks"></i> 할일 관리</h1>
+                <p>간편하게 할일을 관리하세요</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="tab-btn active" data-tab="login">로그인</button>
+                <button class="tab-btn" data-tab="register">회원가입</button>
+            </div>
+
+            <!-- 로그인 폼 -->
+            <form id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label for="login-email">이메일</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">비밀번호</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> 로그인
+                </button>
+            </form>
+
+            <!-- 회원가입 폼 -->
+            <form id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label for="register-username">사용자명</label>
+                    <input type="text" id="register-username" required minlength="3" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label for="register-email">이메일</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">비밀번호</label>
+                    <input type="password" id="register-password" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm-password">비밀번호 확인</label>
+                    <input type="password" id="register-confirm-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> 회원가입
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 메인 애플리케이션 -->
+    <div id="app-container" class="app-container" style="display: none;">
+        <!-- 헤더 -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-tasks"></i> 할일 관리</h1>
+                <div class="header-actions">
+                    <span class="user-info">
+                        <i class="fas fa-user"></i>
+                        <span id="username-display"></span>
+                    </span>
+                    <button id="logout-btn" class="btn btn-secondary">
+                        <i class="fas fa-sign-out-alt"></i> 로그아웃
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <!-- 통계 카드 -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-todos">0</h3>
+                        <p>전체 할일</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="completed-todos">0</h3>
+                        <p>완료된 할일</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pending-todos">0</h3>
+                        <p>진행 중인 할일</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 할일 추가 폼 -->
+            <div class="add-todo-container">
+                <form id="add-todo-form" class="add-todo-form">
+                    <div class="form-row">
+                        <input type="text" id="todo-title" placeholder="새로운 할일을 입력하세요..." required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> 추가
+                        </button>
+                    </div>
+                    <div class="form-row">
+                        <input type="text" id="todo-description" placeholder="설명 (선택사항)">
+                        <select id="todo-priority">
+                            <option value="low">낮음</option>
+                            <option value="medium" selected>보통</option>
+                            <option value="high">높음</option>
+                        </select>
+                        <input type="datetime-local" id="todo-due-date" value="">
+                    </div>
+                </form>
+            </div>
+
+            <!-- 필터 및 검색 -->
+            <div class="filters-container">
+                <div class="filter-group">
+                    <input type="text" id="search-input" placeholder="할일 검색...">
+                    <select id="filter-priority">
+                        <option value="">모든 우선순위</option>
+                        <option value="high">높음</option>
+                        <option value="medium">보통</option>
+                        <option value="low">낮음</option>
+                    </select>
+                    <select id="filter-status">
+                        <option value="">모든 상태</option>
+                        <option value="false">진행 중</option>
+                        <option value="true">완료됨</option>
+                    </select>
+                    <button id="bulk-delete-btn" class="btn btn-danger" style="display: none;">
+                        <i class="fas fa-trash"></i> 선택 삭제
+                    </button>
+                </div>
+            </div>
+
+            <!-- 할일 목록 -->
+            <div class="todos-container">
+                <div id="todos-list" class="todos-list">
+                    <!-- 할일 항목들이 여기에 동적으로 추가됩니다 -->
+                </div>
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>할일이 없습니다</h3>
+                    <p>새로운 할일을 추가해보세요!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 알림 메시지 -->
+    <div id="notification" class="notification" style="display: none;">
+        <span id="notification-message"></span>
+        <button id="notification-close" class="notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- 할일 편집 모달 -->
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>할일 편집</h3>
+                <button id="close-modal" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="edit-todo-form" class="modal-form">
+                <div class="form-group">
+                    <label for="edit-title">제목</label>
+                    <input type="text" id="edit-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-description">설명</label>
+                    <textarea id="edit-description" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-priority">우선순위</label>
+                        <select id="edit-priority">
+                            <option value="low">낮음</option>
+                            <option value="medium">보통</option>
+                            <option value="high">높음</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-due-date">마감일</label>
+                        <input type="datetime-local" id="edit-due-date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="edit-completed">
+                        <span class="checkmark"></span>
+                        완료됨
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-edit" class="btn btn-secondary">취소</button>
+                    <button type="submit" class="btn btn-primary">저장</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/todo.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- 로딩 화면 즉시 숨김 및 기본 시간 설정 -->
+    <script>
+        // 페이지 로드 완료 시 즉시 로딩 화면 숨김
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+                
+                // 인증 상태에 따라 적절한 화면 표시
+                if (!localStorage.getItem('token')) {
+                    const authContainer = document.getElementById('auth-container');
+                    if (authContainer) {
+                        authContainer.style.display = 'flex';
+                    }
+                } else {
+                    const appContainer = document.getElementById('app-container');
+                    if (appContainer) {
+                        appContainer.style.display = 'block';
+                    }
+                }
+                
+            }, 100); // 0.1초 후 실행
+        });
+    </script>
+</body>
+</html>
