@@ -1,5 +1,7 @@
 // API 기본 설정
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+    ? '/api'  // 프로덕션: 상대 경로 (Caddy 프록시 사용)
+    : 'http://localhost:5000/api';  // 개발: 절대 경로
 
 // 토큰 관리
 class TokenManager {

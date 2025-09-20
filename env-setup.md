@@ -15,6 +15,9 @@ JWT_SECRET=your-super-secret-jwt-key-change-in-production
 PORT=5000
 FRONTEND_PORT=5001
 
+# 프론트엔드 URL (프로덕션용)
+FRONTEND_URL=https://yourdomain.com
+
 # 환경 설정
 NODE_ENV=development
 ```
