@@ -13,6 +13,7 @@ JWT_SECRET=your-super-secret-jwt-key-change-in-production
 
 # 서버 포트
 PORT=5000
+FRONTEND_PORT=5001
 
 # 환경 설정
 NODE_ENV=development

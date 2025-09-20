@@ -13,7 +13,10 @@ const PORT = process.env.PORT || 5000;
 
 // 미들웨어 설정
 app.use(cors({
-    origin: 'http://localhost:5173', // Vite 프론트엔드 서버 주소
+    origin: [
+        `http://localhost:${process.env.FRONTEND_PORT || 5001}`,
+        'http://localhost:3000' // 기본값 유지
+    ],
     credentials: true
 }));
 app.use(express.json());
