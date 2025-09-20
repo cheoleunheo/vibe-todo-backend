@@ -1,5 +1,7 @@
 // API 기본 설정
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
+// 브라우저에서는 process.env를 사용할 수 없으므로 호스트명으로 판단
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const API_BASE_URL = isProduction 
     ? '/api'  // 프로덕션: 상대 경로 (Caddy 프록시 사용)
     : 'http://localhost:5000/api';  // 개발: 절대 경로
 

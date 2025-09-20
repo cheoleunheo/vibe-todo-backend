@@ -31,7 +31,7 @@
             <form id="login-form" class="auth-form active">
                 <div class="form-group">
                     <label for="login-email">이메일</label>
-                    <input type="email" id="login-email" required>
+                    <input type="email" id="login-email" autocomplete="username" required>
                 </div>
                 <div class="form-group">
                     <label for="login-password">비밀번호</label>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="form-group">
                     <label for="register-email">이메일</label>
-                    <input type="email" id="register-email" required>
+                    <input type="email" id="register-email" autocomplete="username" required>
                 </div>
                 <div class="form-group">
                     <label for="register-password">비밀번호</label>
@@ -245,19 +245,28 @@
                 }
                 
                 // 인증 상태에 따라 적절한 화면 표시
-                if (!localStorage.getItem('token')) {
+                // TokenManager가 로드된 후에만 실행
+                if (window.TokenManager) {
+                    if (!TokenManager.isAuthenticated()) {
+                        const authContainer = document.getElementById('auth-container');
+                        if (authContainer) {
+                            authContainer.style.display = 'flex';
+                        }
+                    } else {
+                        const appContainer = document.getElementById('app-container');
+                        if (appContainer) {
+                            appContainer.style.display = 'block';
+                        }
+                    }
+                } else {
+                    // TokenManager가 아직 로드되지 않은 경우 기본적으로 로그인 화면 표시
                     const authContainer = document.getElementById('auth-container');
                     if (authContainer) {
                         authContainer.style.display = 'flex';
                     }
-                } else {
-                    const appContainer = document.getElementById('app-container');
-                    if (appContainer) {
-                        appContainer.style.display = 'block';
-                    }
                 }
                 
-            }, 100); // 0.1초 후 실행
+            }, 200); // 0.2초 후 실행 (JavaScript 로드 시간 고려)
         });
     </script>
 </body>
