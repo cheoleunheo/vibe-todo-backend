@@ -82,9 +82,66 @@ npm run frontend
 
 6. **웹사이트 접속**:
 ```
-프론트엔드: http://localhost:3000
+프론트엔드: http://localhost:5001
 백엔드 API: http://localhost:5000
 ```
+
+## 🌐 프로덕션 배포
+
+### 우분투 서버 배포 (DuckDNS + Caddy)
+
+1. **서버 설정**:
+```bash
+# Node.js 설치
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# PM2 설치
+sudo npm install -g pm2
+
+# Caddy 설치
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install caddy
+```
+
+2. **프로젝트 배포**:
+```bash
+# 프로젝트 클론
+git clone https://github.com/cheoleunheo/vibe-todo-backend.git
+cd vibe-todo-backend
+
+# 의존성 설치
+npm install
+
+# 환경변수 설정
+cp env.example .env
+nano .env  # MongoDB URI, JWT Secret 등 설정
+```
+
+3. **서비스 실행**:
+```bash
+# PM2로 서비스 시작
+pm2 start ecosystem.config.js
+
+# PM2 자동 시작 설정
+pm2 startup
+pm2 save
+
+# Caddy 설정
+sudo cp Caddyfile /etc/caddy/
+sudo systemctl start caddy
+sudo systemctl enable caddy
+```
+
+4. **외부 도메인 접속**:
+```
+https://heoce-todo-front.duckdns.org
+```
+
+자세한 배포 가이드는 `deployment-guide.md` 파일을 참고하세요.
 
 ## 🛠️ 기술 스택
 
@@ -124,9 +181,15 @@ todo-backend/
 │       ├── auth.js      # 인증 관련 기능
 │       ├── todo.js      # 할일 관리 기능
 │       └── app.js       # 메인 애플리케이션
-├── package.json         # 프로젝트 설정
-├── package-lock.json    # 의존성 잠금 파일
-└── README.md           # 프로젝트 문서
+├── frontend-server.js   # 프론트엔드 서버
+├── Caddyfile           # Caddy 리버스 프록시 설정
+├── ecosystem.config.js # PM2 설정 파일
+├── deployment-guide.md # 배포 가이드
+├── env-setup.md        # 환경변수 설정 가이드
+├── env.example         # 환경변수 예시 파일
+├── package.json        # 프로젝트 설정
+├── package-lock.json   # 의존성 잠금 파일
+└── README.md          # 프로젝트 문서
 ```
 
 ## 📡 API 엔드포인트
