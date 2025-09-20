@@ -13,8 +13,9 @@ const PORT = process.env.PORT || 5000;
 
 // 미들웨어 설정
 const allowedOrigins = [
-    `http://localhost:${process.env.FRONTEND_PORT || 5100}`, // 환경변수로 프론트엔드 포트 관리
+    `http://localhost:${process.env.FRONTEND_PORT || 5001}`, // 환경변수로 프론트엔드 포트 관리
     'http://localhost:3000',  // 기본값 유지
+    'https://heoce-todo-front.duckdns.org',  // DuckDNS 도메인
     process.env.FRONTEND_URL  // 환경변수로 프론트엔드 URL 관리 (프로덕션용)
 ].filter(Boolean); // undefined 값 제거
 

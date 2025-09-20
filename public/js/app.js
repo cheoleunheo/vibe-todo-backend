@@ -18,19 +18,25 @@ class App {
 
         // 온라인/오프라인 상태 변경
         window.addEventListener('online', () => {
-            NotificationManager.success('인터넷 연결이 복구되었습니다.');
+            if (window.NotificationManager) {
+                NotificationManager.success('인터넷 연결이 복구되었습니다.');
+            }
             this.handleOnlineStatusChange(true);
         });
 
         window.addEventListener('offline', () => {
-            NotificationManager.warning('인터넷 연결이 끊어졌습니다. 일부 기능이 제한될 수 있습니다.');
+            if (window.NotificationManager) {
+                NotificationManager.warning('인터넷 연결이 끊어졌습니다. 일부 기능이 제한될 수 있습니다.');
+            }
             this.handleOnlineStatusChange(false);
         });
 
         // 에러 처리
         window.addEventListener('error', (event) => {
             console.error('전역 에러:', event.error);
-            NotificationManager.error('예상치 못한 오류가 발생했습니다.');
+            if (window.NotificationManager) {
+                NotificationManager.error('예상치 못한 오류가 발생했습니다.');
+            }
         });
 
         // Promise rejection 처리
@@ -41,7 +47,9 @@ class App {
                 (event.reason.message.includes('fetch') || 
                  event.reason.message.includes('network') ||
                  event.reason.message.includes('Failed to fetch'))) {
-                NotificationManager.error('네트워크 연결을 확인해주세요.');
+                if (window.NotificationManager) {
+                    NotificationManager.error('네트워크 연결을 확인해주세요.');
+                }
             }
         });
     }
@@ -87,8 +95,10 @@ class App {
         if (isOnline) {
             body.classList.remove('offline');
             // 오프라인 상태에서 온라인으로 복구 시 데이터 동기화
-            if (authManager.isAuthenticated()) {
-                todoManager.refresh();
+            if (window.authManager && window.authManager.isAuthenticated()) {
+                if (window.todoManager) {
+                    todoManager.refresh();
+                }
             }
         } else {
             body.classList.add('offline');
@@ -203,7 +213,7 @@ window.addEventListener('error', (event) => {
     console.error('전역 에러:', event.error);
     
     // 사용자에게 친화적인 에러 메시지 표시
-    if (event.error && event.error.message) {
+    if (event.error && event.error.message && window.NotificationManager) {
         NotificationManager.error('예상치 못한 오류가 발생했습니다. 페이지를 새로고침해주세요.');
     }
 });
@@ -215,6 +225,8 @@ window.addEventListener('unhandledrejection', (event) => {
     // 네트워크 관련 에러인 경우
     if (event.reason && event.reason.message && 
         (event.reason.message.includes('fetch') || event.reason.message.includes('network'))) {
-        NotificationManager.error('네트워크 연결을 확인해주세요.');
+        if (window.NotificationManager) {
+            NotificationManager.error('네트워크 연결을 확인해주세요.');
+        }
     }
 });

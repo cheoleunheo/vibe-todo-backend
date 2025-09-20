@@ -51,7 +51,7 @@ PORT=5000
 FRONTEND_PORT=5001
 
 # 프론트엔드 URL (실제 도메인)
-FRONTEND_URL=https://yourdomain.com
+FRONTEND_URL=https://heoce-todo-front.duckdns.org
 
 # 환경 설정
 NODE_ENV=production

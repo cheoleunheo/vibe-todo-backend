@@ -1,8 +1,8 @@
-# Caddy 설정 파일 예시
+# Caddy 설정 파일
 # 우분투 서버에서 Caddy를 사용한 리버스 프록시 설정
 
-# 도메인 설정 (실제 도메인으로 변경하세요)
-yourdomain.com {
+# DuckDNS 도메인 설정
+heoce-todo-front.duckdns.org {
     # API 요청을 백엔드 서버(포트 5000)로 프록시
     reverse_proxy /api/* localhost:5000
     
@@ -29,6 +29,6 @@ yourdomain.com {
 }
 
 # HTTP를 HTTPS로 리다이렉트 (선택사항)
-# yourdomain.com:80 {
-#     redir https://yourdomain.com{uri} permanent
+# heoce-todo-front.duckdns.org:80 {
+#     redir https://heoce-todo-front.duckdns.org{uri} permanent
 # }
